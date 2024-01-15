@@ -58,15 +58,15 @@ public class RegistrationController {
     @PostMapping
     public ResponseEntity<Map> registerUser(@RequestBody @Valid NewUserDTO userData) {
 
-        Map<String, String> response = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
         User createdUser = userService.createNewUser(userData);
         if(createdUser == null) {
-            response.put("error", "Username is already taken");
-            return ResponseEntity.status(401).body(response);
+            result.put("error", "Username is already taken");
+            return ResponseEntity.status(401).body(result);
         }
 
-        response.put("message", "User " + createdUser.getUsername() + " successfully created");
+        result.put("message", "User " + createdUser.getUsername() + " successfully created");
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(result);
     }
 }

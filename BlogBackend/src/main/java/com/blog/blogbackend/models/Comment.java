@@ -1,5 +1,6 @@
 package com.blog.blogbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -16,6 +17,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;

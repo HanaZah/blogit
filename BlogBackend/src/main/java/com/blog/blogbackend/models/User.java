@@ -1,5 +1,6 @@
 package com.blog.blogbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,10 +21,13 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Post> posts;
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Vote> votes;
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;
 

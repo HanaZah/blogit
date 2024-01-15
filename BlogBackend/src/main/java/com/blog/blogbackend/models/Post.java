@@ -1,5 +1,6 @@
 package com.blog.blogbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+    @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Vote> votes;
 
