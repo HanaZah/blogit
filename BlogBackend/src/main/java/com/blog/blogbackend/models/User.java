@@ -15,14 +15,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String username;
-
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "author")
+    private List<Post> posts;
+    @OneToMany(mappedBy = "user")
+    private List<Vote> votes;
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments;
 
     private boolean deleted = false;
 
@@ -90,6 +93,30 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public boolean isDeleted() {
