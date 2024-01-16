@@ -29,7 +29,7 @@ public class RegistrationController {
         Map<String, String> response = new HashMap<>();
         FieldErrorsExtractor extractor = new FieldErrorsExtractor(e);
         String message = (extractor.getFailedFields().size() == 1)? extractor.getFirstError().getDefaultMessage()
-                : "Username and password are required";
+                : "Username and password are required.";
 
         response.put("error", message);
 
@@ -54,18 +54,13 @@ public class RegistrationController {
         return ResponseEntity.status(401).body(result);
     }
 
-
     @PostMapping
-    public ResponseEntity<Map> registerUser(@RequestBody @Valid NewUserDTO userData) {
+    public ResponseEntity<Map> registerUser(@RequestBody @Valid NewUserDTO userData) throws Exception {
 
         Map<String, String> result = new HashMap<>();
         User createdUser = userService.createNewUser(userData);
-        if(createdUser == null) {
-            result.put("error", "Username is already taken");
-            return ResponseEntity.status(401).body(result);
-        }
 
-        result.put("message", "User " + createdUser.getUsername() + " successfully created");
+        result.put("message", "User " + createdUser.getUsername() + " successfully created.");
 
         return ResponseEntity.ok(result);
     }

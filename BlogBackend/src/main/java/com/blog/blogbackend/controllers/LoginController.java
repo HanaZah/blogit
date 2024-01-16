@@ -4,6 +4,7 @@ import com.blog.blogbackend.models.DTOs.AuthResponseDTO;
 import com.blog.blogbackend.models.DTOs.LoginUserDTO;
 import com.blog.blogbackend.services.AuthService;
 import com.blog.blogbackend.services.UserService;
+import com.blog.blogbackend.utils.FieldErrorsExtractor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,7 +27,20 @@ public class LoginController {
         this.authService = authService;
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
+
+        Map<String, String> response = new HashMap<>();
+        FieldErrorsExtractor extractor = new FieldErrorsExtractor(e);
+        String message = (extractor.getFailedFields().size() == 1)? extractor.getFirstError().getDefaultMessage()
+                : "Username and password are required.";
+
+        response.put("error", message);
+
+        return ResponseEntity.status(401).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map> noRequestBody() {
 
         Map<String, String> result = new HashMap<>();
@@ -40,7 +54,7 @@ public class LoginController {
 
         Map<String, String> result = new HashMap<>();
 
-        result.put("message", "Email or password is incorrect.");
+        result.put("error", "Username or password is incorrect.");
 
         return ResponseEntity.status(401).body(result);
     }

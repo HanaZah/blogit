@@ -26,12 +26,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User createNewUser(NewUserDTO userData) {
+    public User createNewUser(NewUserDTO userData) throws Exception {
 
         String username = userData.getUsername();
 
         if(findUserByUsername(username) != null) {
-            return null;
+            throw new Exception("Username is already taken.");
         }
 
         String password = passwordEncoder.encode(userData.getPassword());

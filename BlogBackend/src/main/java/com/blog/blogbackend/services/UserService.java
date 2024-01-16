@@ -7,5 +7,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
     User findUserByUsername(String username);
 
-    User createNewUser(NewUserDTO userData);
+    User createNewUser(NewUserDTO userData) throws Exception;
 }

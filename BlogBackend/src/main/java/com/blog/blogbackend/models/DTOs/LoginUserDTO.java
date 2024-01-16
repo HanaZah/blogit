@@ -5,12 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 public class LoginUserDTO {
 
-    @NotNull(message = "Username is required")
-    @NotBlank(message = "Username is required")
+    @NotNull(message = "Username is required.")
+    @NotBlank(message = "Username is required.")
     private String username;
 
-    @NotNull (message = "Password is required")
-    @NotBlank (message = "Password is required")
+    @NotNull (message = "Password is required.")
+    @NotBlank (message = "Password is required.")
     private String password;
 
     public LoginUserDTO() {
