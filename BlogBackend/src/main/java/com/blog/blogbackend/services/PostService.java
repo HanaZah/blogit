@@ -18,7 +18,7 @@ public interface PostService {
 
     Post getPostById(Long id);
 
-    Post updatePostByAuthor(Post originalPost, NewPostDTO updateData);
+    Post updatePost(Post originalPost, NewPostDTO updateData);
 
     void verifyAuthor(Post post, User author);
 

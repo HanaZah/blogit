@@ -1,4 +1,4 @@
-package com.blog.blogbackend;
+package com.blog.blogbackend.unit;
 
 import com.blog.blogbackend.models.DTOs.AuthResponseDTO;
 import com.blog.blogbackend.models.DTOs.LoginUserDTO;

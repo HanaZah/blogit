@@ -12,6 +12,11 @@ public class NewPostDTO {
     @NotBlank
     private String content;
 
+    public NewPostDTO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public NewPostDTO() {
     }
 

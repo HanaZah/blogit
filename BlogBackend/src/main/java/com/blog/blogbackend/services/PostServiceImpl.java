@@ -1,5 +1,6 @@
 package com.blog.blogbackend.services;
 
+import com.blog.blogbackend.models.Comment;
 import com.blog.blogbackend.models.DTOs.NewPostDTO;
 import com.blog.blogbackend.models.DTOs.PostOverviewDTO;
 import com.blog.blogbackend.models.Post;
@@ -65,7 +66,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post updatePostByAuthor(Post originalPost, NewPostDTO updateData) {
+    public Post updatePost(Post originalPost, NewPostDTO updateData) {
 
         originalPost.setTitle(updateData.getTitle());
         originalPost.setContent(updateData.getContent());

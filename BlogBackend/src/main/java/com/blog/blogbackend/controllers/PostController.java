@@ -77,7 +77,7 @@ public class PostController {
 
         Post originalPost = postService.getPostById(postId);
         postService.verifyAuthor(originalPost, user);
-        Post updatedPost = postService.updatePostByAuthor(originalPost, postData);
+        Post updatedPost = postService.updatePost(originalPost, postData);
 
         return ResponseEntity.ok(updatedPost);
     }

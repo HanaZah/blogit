@@ -1,4 +1,4 @@
-package com.blog.blogbackend;
+package com.blog.blogbackend.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.blog.blogbackend.models.DTOs.LoginUserDTO;

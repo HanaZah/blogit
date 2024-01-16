@@ -3,6 +3,7 @@ package com.blog.blogbackend.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class Post {
         this.title = title;
         this.content = content;
         this.author = author;
+        comments = new ArrayList<>();
+        votes = new ArrayList<>();
     }
 
     public Post() {}

@@ -1,4 +1,4 @@
-package com.blog.blogbackend;
+package com.blog.blogbackend.unit;
 
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.services.JwtService;
