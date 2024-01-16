@@ -3,6 +3,7 @@ package com.blog.blogbackend.controllers;
 import com.blog.blogbackend.models.DTOs.NewUserDTO;
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.services.UserService;
+import com.blog.blogbackend.utils.DTOValidationResultHandler;
 import com.blog.blogbackend.utils.FieldErrorsExtractor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,12 @@ public class RegistrationController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
 
-        Map<String, String> response = new HashMap<>();
-        FieldErrorsExtractor extractor = new FieldErrorsExtractor(e);
-        String message = (extractor.getFailedFields().size() == 1)? extractor.getFirstError().getDefaultMessage()
-                : "Username and password are required.";
+        DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(
+                "Username and password are required."
+        );
+        Map<String, String> result = resultHandler.getResultsForInvalidFields(e);
 
-        response.put("error", message);
-
-        return ResponseEntity.status(401).body(response);
+        return ResponseEntity.status(401).body(result);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
