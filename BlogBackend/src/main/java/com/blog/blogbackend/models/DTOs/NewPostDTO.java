@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotNull;
 
 public class NewPostDTO {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Title is required.")
+    @NotBlank(message = "Title is required.")
     private String title;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Content is required.")
+    @NotBlank(message = "Content is required.")
     private String content;
 
     public NewPostDTO(String title, String content) {

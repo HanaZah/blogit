@@ -110,10 +110,10 @@ class RegistrationBackendIntegrationTests {
     @Test
     public void POSTregisterWithUsernameAlreadyTaken() throws Exception {
         NewUserDTO newUserData = new NewUserDTO(
-                "johndoe", "password123");
+                "johnsame", "password123");
 
         NewUserDTO anotherNewUserData = new NewUserDTO(
-                "johndoe", "password456");
+                "johnsame", "password456");
 
 
         mockMvc.perform(

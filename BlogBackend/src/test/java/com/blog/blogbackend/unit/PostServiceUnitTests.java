@@ -169,7 +169,7 @@ public class PostServiceUnitTests {
     public void deletePostFlagsPostAndAllCorrespondingVotesAndCommentsAsDeleted() {
         Comment comment = new Comment("Yes, I comment my own post", author, post1);
         Vote vote = new Vote(author, post1);
-        vote.setValue(1);
+        vote.setVoteValue(1);
         post1.getComments().add(comment);
         post1.getVotes().add(vote);
 

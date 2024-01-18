@@ -67,7 +67,6 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post updatePost(Post originalPost, NewPostDTO updateData) {
-
         originalPost.setTitle(updateData.getTitle());
         originalPost.setContent(updateData.getContent());
 

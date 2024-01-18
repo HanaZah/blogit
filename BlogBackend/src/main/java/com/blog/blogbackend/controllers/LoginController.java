@@ -20,20 +20,17 @@ import java.util.Map;
 @RequestMapping("user/login")
 public class LoginController {
 
-    private final UserService userService;
     private final AuthService authService;
+    private final String defaultErrorMessage = "Username and password are required.";
 
-    public LoginController(UserService userService, AuthService authService) {
-        this.userService = userService;
+    public LoginController(AuthService authService) {
         this.authService = authService;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
 
-        DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(
-                "Username and password are required."
-        );
+        DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(defaultErrorMessage);
         Map<String, String> result = resultHandler.getResultsForInvalidFields(e);
 
         return ResponseEntity.status(401).body(result);
@@ -43,7 +40,7 @@ public class LoginController {
     public ResponseEntity<Map> noRequestBody() {
 
         Map<String, String> result = new HashMap<>();
-        result.put("error", "Username and password are required.");
+        result.put("error", defaultErrorMessage);
 
         return ResponseEntity.status(401).body(result);
     }

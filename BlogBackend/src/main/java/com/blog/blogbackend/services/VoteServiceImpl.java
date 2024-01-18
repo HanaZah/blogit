@@ -16,7 +16,8 @@ public class VoteServiceImpl implements VoteService{
 
     @Override
     public Post calculateRatingForPost(Post post) {
-        post.setRating(voteRepository.getRatingForPost(post));
+        int rating = voteRepository.getRatingForPost(post);
+        post.setRating(rating);
         return post;
     }
 

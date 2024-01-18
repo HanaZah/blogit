@@ -5,6 +5,7 @@ import com.blog.blogbackend.models.DTOs.PostOverviewDTO;
 import com.blog.blogbackend.models.Post;
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.services.PostService;
+import com.blog.blogbackend.utils.DTOValidationResultHandler;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,16 +22,26 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final String defaultErrorMessage = "Title and content are required.";
 
     public PostController(PostService postService) {
         this.postService = postService;
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
+
+        DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(defaultErrorMessage);
+        Map<String, String> result = resultHandler.getResultsForInvalidFields(e);
+
+        return ResponseEntity.status(401).body(result);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map> missingRequestBodyParts() {
 
         Map<String, String> result = new HashMap<>();
-        result.put("error", "Title and text are required.");
+        result.put("error", defaultErrorMessage);
 
         return ResponseEntity.status(401).body(result);
     }
@@ -83,13 +94,15 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId,
+    public ResponseEntity<Map> deletePost(@PathVariable Long postId,
                                              @AuthenticationPrincipal User user) {
 
+        Map<String, String> result = new HashMap<>();
         Post post = postService.getPostById(postId);
         postService.verifyAuthor(post, user);
         postService.deletePost(post);
+        result.put("message", "Post has been successfully deleted.");
 
-        return ResponseEntity.ok("Post has been successfully deleted.");
+        return ResponseEntity.ok(result);
     }
 }
