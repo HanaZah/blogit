@@ -4,8 +4,10 @@ import com.blog.blogbackend.models.DTOs.NewPostDTO;
 import com.blog.blogbackend.models.Post;
 import com.blog.blogbackend.models.Role;
 import com.blog.blogbackend.models.User;
+import com.blog.blogbackend.models.Vote;
 import com.blog.blogbackend.repositories.PostRepository;
 import com.blog.blogbackend.repositories.UserRepository;
+import com.blog.blogbackend.repositories.VoteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,17 +39,22 @@ public class PostsIntegrationTests {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private VoteRepository voteRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setUp() {
         om = new ObjectMapper();
+        voteRepository.deleteAll();
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @AfterAll
     public void tearDown() {
-        postRepository.deleteAll();
-        userRepository.deleteAll();
+
+        voteRepository.deleteAll();
     }
 
     private User prepareUser() {
@@ -333,6 +340,136 @@ public class PostsIntegrationTests {
 
         mockMvc.perform(
                         delete("/posts/" + id))
+                .andExpect(status().is(401))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+    }
+
+    @Test
+    public void PATCHvoteupWithExistingIDAndNotVotedBefore() throws Exception {
+        preparePosts();
+        mockAuthenticationContext(prepareUser());
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Long id = post.getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-up"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rating").exists())
+                .andExpect(jsonPath("$.rating").value(1));
+
+    }
+
+    @Test
+    public void PATCHvoteupWithExistingIDAndDownvotedBefore() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Vote vote = new Vote(user, post);
+        vote.setVoteValue(-1);
+        voteRepository.save(vote);
+        Long id = postRepository.save(post).getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-up"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rating").exists())
+                .andExpect(jsonPath("$.rating").value(0));
+    }
+
+    @Test
+    public void PATCHvoteupWithExistingIDAndUpvotedBefore() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Vote vote = new Vote(user, post);
+        vote.setVoteValue(1);
+        voteRepository.save(vote);
+        Long id = postRepository.save(post).getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-up"))
+                .andExpect(status().is(401))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value("You have already upvoted this post."));
+    }
+
+    @Test
+    public void PATCHvoteupWithNonexistentId() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Long id = 12345L;
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-up"))
+                .andExpect(status().is(401))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+    }
+
+    @Test
+    public void PATCHvotedownWithExistingIDAndNotVotedBefore() throws Exception {
+        preparePosts();
+        mockAuthenticationContext(prepareUser());
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Long id = post.getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-down"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rating").exists())
+                .andExpect(jsonPath("$.rating").value(-1));
+
+    }
+
+    @Test
+    public void PATCHvotedownWithExistingIDAndUpvotedBefore() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Vote vote = new Vote(user, post);
+        vote.setVoteValue(1);
+        voteRepository.save(vote);
+        Long id = postRepository.save(post).getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-down"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rating").exists())
+                .andExpect(jsonPath("$.rating").value(0));
+    }
+
+    @Test
+    public void PATCHvotedownWithExistingIDAndDownvotedBefore() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Post post = postRepository.findAllByDeletedOrderByRatingDesc(false).get(0);
+        Vote vote = new Vote(user, post);
+        vote.setVoteValue(-1);
+        voteRepository.save(vote);
+        Long id = postRepository.save(post).getId();
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-down"))
+                .andExpect(status().is(401))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value("You have already downvoted this post."));
+    }
+
+    @Test
+    public void PATCHvotedownWithNonexistentId() throws Exception {
+        preparePosts();
+        User user = prepareUser();
+        mockAuthenticationContext(user);
+        Long id = 12345L;
+
+        mockMvc.perform(
+                        patch("/posts/" + id + "/vote-down"))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
                 .andExpect(jsonPath("$.error").value("Post ID does not match."));
