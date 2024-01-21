@@ -113,6 +113,7 @@ public class PostController {
         Post post = postService.getPostById(postId);
         int newRating = postService.voteUp(post, user);
         result.put("rating", newRating);
+        result.put("votes", postService.getPostById(postId).getVotes().size());
 
         return ResponseEntity.ok(result);
     }
