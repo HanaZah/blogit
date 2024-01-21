@@ -14,7 +14,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void deleteComment(Comment comment) {
+    public void softDeleteComment(Comment comment) {
         comment.setDeleted(true);
         commentRepository.save(comment);
     }

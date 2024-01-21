@@ -46,6 +46,11 @@ public class LoginBackendIntegrationTests {
         setUpUser();
     }
 
+    @AfterAll
+    public void tearDown() {
+        userRepository.deleteAll();
+    }
+
     private void setUpUser() {
         if(userRepository.findUserByUsernameAndDeleted("johndoe", false).isEmpty()) {
             user.setUsername("johndoe");

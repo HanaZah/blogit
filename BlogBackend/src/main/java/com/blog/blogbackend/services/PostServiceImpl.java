@@ -1,6 +1,5 @@
 package com.blog.blogbackend.services;
 
-import com.blog.blogbackend.models.Comment;
 import com.blog.blogbackend.models.DTOs.NewPostDTO;
 import com.blog.blogbackend.models.DTOs.PostOverviewDTO;
 import com.blog.blogbackend.models.Post;
@@ -74,12 +73,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deletePost(Post post) {
+    public void softDeletePost(Post post) {
         post.setDeleted(true);
-        post.getComments().forEach(commentService::deleteComment);
-        post.getVotes().forEach(voteService::deleteVote);
+        post.getComments().forEach(commentService::softDeleteComment);
+        post.getVotes().forEach(voteService::softDeleteVote);
 
         postRepository.save(post);
+    }
+
+    @Override
+    public int voteUp(Post post, User user) {
+        return postRepository
+                .save(voteService.voteUp(post, user))
+                .getRating();
+    }
+
+    @Override
+    public int voteDown(Post post, User user) {
+        return postRepository
+                .save(voteService.voteDown(post, user))
+                .getRating();
     }
 
 }

@@ -95,13 +95,35 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Map> deletePost(@PathVariable Long postId,
-                                             @AuthenticationPrincipal User user) {
+                                          @AuthenticationPrincipal User user) {
 
         Map<String, String> result = new HashMap<>();
         Post post = postService.getPostById(postId);
         postService.verifyAuthor(post, user);
-        postService.deletePost(post);
+        postService.softDeletePost(post);
         result.put("message", "Post has been successfully deleted.");
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/{postId}/vote-up")
+    public ResponseEntity<Map> upvotePost(@PathVariable Long postId,
+                                          @AuthenticationPrincipal User user) {
+        Map<String, Integer> result = new HashMap<>();
+        Post post = postService.getPostById(postId);
+        int newRating = postService.voteUp(post, user);
+        result.put("rating", newRating);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/{postId}/vote-down")
+    public ResponseEntity<Map> downvotePost(@PathVariable Long postId,
+                                          @AuthenticationPrincipal User user) {
+        Map<String, Integer> result = new HashMap<>();
+        Post post = postService.getPostById(postId);
+        int newRating = postService.voteDown(post, user);
+        result.put("rating", newRating);
 
         return ResponseEntity.ok(result);
     }

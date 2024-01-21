@@ -166,7 +166,7 @@ public class PostServiceUnitTests {
     }
 
     @Test
-    public void deletePostFlagsPostAndAllCorrespondingVotesAndCommentsAsDeleted() {
+    public void softDeletePostFlagsPostAndAllCorrespondingVotesAndCommentsAsDeleted() {
         Comment comment = new Comment("Yes, I comment my own post", author, post1);
         Vote vote = new Vote(author, post1);
         vote.setVoteValue(1);
@@ -177,14 +177,14 @@ public class PostServiceUnitTests {
             Comment c = invocation.getArgument(0);
             c.setDeleted(true);
             return null;
-        }).when(commentService).deleteComment(any(Comment.class));
+        }).when(commentService).softDeleteComment(any(Comment.class));
         doAnswer(invocation -> {
             Vote v = invocation.getArgument(0);
             v.setDeleted(true);
             return null;
-        }).when(voteService).deleteVote(any(Vote.class));
+        }).when(voteService).softDeleteVote(any(Vote.class));
 
-        postService.deletePost(post1);
+        postService.softDeletePost(post1);
 
         assertTrue(post1.isDeleted());
         assertTrue(comment.isDeleted());

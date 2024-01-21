@@ -22,5 +22,9 @@ public interface PostService {
 
     void verifyAuthor(Post post, User author);
 
-    void deletePost(Post post);
+    void softDeletePost(Post post);
+
+    int voteUp(Post post, User user);
+
+    int voteDown(Post post, User user);
 }

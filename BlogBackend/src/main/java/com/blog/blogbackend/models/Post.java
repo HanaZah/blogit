@@ -24,10 +24,10 @@ public class Post {
     @JoinColumn(name = "author_id")
     private User author;
     @JsonIgnore
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
     private boolean deleted = false;
 
