@@ -145,6 +145,7 @@ public class PostServiceUnitTests {
     @Test
     public void verifyAuthorThrowsCorrectExceptionForWrongAuthor() {
         User notAuthor = new User("jane", "password");
+        notAuthor.setId(12345L);
 
         assertThrows(AccessDeniedException.class, () -> postService.verifyAuthor(post1, notAuthor));
     }

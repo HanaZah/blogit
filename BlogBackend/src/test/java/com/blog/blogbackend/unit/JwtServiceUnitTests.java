@@ -27,7 +27,7 @@ public class JwtServiceUnitTests {
     @Mock
     private TimeProvider timeProvider;
     private JwtService jwtService;
-    private final String VALID_UNEXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiam9obmRvZSIsImV4cCI6MTcwNTQ1MDM0OX0.TmmNUS8VQxKI4K9wc3QTWMP215Zl9zLkgnrltguL0ms";
+    private final String VALID_UNEXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiam9obmRvZSIsImV4cCI6MTczNzQ5Njc4MX0.ezr18iElPN89rVKmsIsa2QIlJw3UAiOJr3XnkvdXzIQ";
     private final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsIm5hbWUiOiJKb2huIiwiZW1haWwiOiJqb2hueUB0ZXN0LmNvbSJ9.pX23_nCwePfDIpKervoALxNqft0hCtUPPZqKVl0qp-k";
     private final long TIME_BEFORE_EXPIRATION_IN_MILLIS = 1705364622525L;
 
@@ -53,7 +53,7 @@ public class JwtServiceUnitTests {
 
     @Test
     public void extractUsernameReturnsNullForMissingClaim() {
-        String tokenWithoutUsernameClaim = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTcwNTQ1NDU4OH0.QXh3ZTfKqMh8arOI6j67pvodQXt-1jCRd5hyyK17_Ko";
+        String tokenWithoutUsernameClaim = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTczNzQ5Njk1Nn0.yjMdfyWzygevdYtFlPRPukmlCpV1IilNu1laZgEQkrw";
         String extractedEmail = jwtService.extractUsername(tokenWithoutUsernameClaim);
         assertNull(extractedEmail);
     }
@@ -79,7 +79,7 @@ public class JwtServiceUnitTests {
 
     @Test
     public void extractIdReturnsNullForMissingClaim() {
-        String tokenWithoutUserIdClaim = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJleHAiOjE3MDU0NTU0Njh9.ealy5GODgl925nXBtBwDDxctPW9wodm7h3COPZvWQvo";
+        String tokenWithoutUserIdClaim = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJleHAiOjE3Mzc0OTY4ODl9.ebG8GUDGvLBe8KhJw0VHxez829n2Egvic3lljfT7Bfo";
         Long extractedUserId = jwtService.extractId(tokenWithoutUserIdClaim);
         assertNull(extractedUserId);
     }

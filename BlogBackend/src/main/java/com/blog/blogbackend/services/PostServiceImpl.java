@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public Post getPostById(Long id) {
         return postRepository.findByIdAndDeleted(id, false)
-                .orElseThrow(() -> new EntityNotFoundException("Post with ID" + id + "does not exist."));
+                .orElseThrow(() -> new EntityNotFoundException("Post with ID " + id + " does not exist."));
     }
 
     @Override

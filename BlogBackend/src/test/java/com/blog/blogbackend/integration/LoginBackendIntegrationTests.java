@@ -43,6 +43,7 @@ public class LoginBackendIntegrationTests {
     @BeforeEach
     public void setUp() {
         om = new ObjectMapper();
+        userRepository.deleteAll();
         setUpUser();
     }
 

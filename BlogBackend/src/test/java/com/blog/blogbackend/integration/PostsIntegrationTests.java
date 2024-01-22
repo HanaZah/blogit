@@ -53,8 +53,9 @@ public class PostsIntegrationTests {
 
     @AfterAll
     public void tearDown() {
-
         voteRepository.deleteAll();
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private User prepareUser() {
@@ -291,7 +292,7 @@ public class PostsIntegrationTests {
         preparePosts();
         mockAuthenticationContext(prepareUser());
         NewPostDTO updateData = new NewPostDTO("Update title", "update content");
-        Long id = 12345L;
+        long id = 12345L;
 
         mockMvc.perform(
                         patch("/posts/" + id)
@@ -299,7 +300,7 @@ public class PostsIntegrationTests {
                                 .content(om.writeValueAsString(updateData)))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+                .andExpect(jsonPath("$.error").value("Post with ID " + id + " does not exist."));
     }
 
     @Test
@@ -337,13 +338,13 @@ public class PostsIntegrationTests {
     public void DELETEpostsWithNonexistentId() throws Exception {
         preparePosts();
         mockAuthenticationContext(prepareUser());
-        Long id = 12345L;
+        long id = 12345L;
 
         mockMvc.perform(
                         delete("/posts/" + id))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+                .andExpect(jsonPath("$.error").value("Post with ID " + id + " does not exist."));
     }
 
     @Test
@@ -402,13 +403,13 @@ public class PostsIntegrationTests {
         preparePosts();
         User user = prepareUser();
         mockAuthenticationContext(user);
-        Long id = 12345L;
+        long id = 12345L;
 
         mockMvc.perform(
                         patch("/posts/" + id + "/vote-up"))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+                .andExpect(jsonPath("$.error").value("Post with ID " + id + " does not exist."));
     }
 
     @Test
@@ -467,12 +468,12 @@ public class PostsIntegrationTests {
         preparePosts();
         User user = prepareUser();
         mockAuthenticationContext(user);
-        Long id = 12345L;
+        long id = 12345L;
 
         mockMvc.perform(
                         patch("/posts/" + id + "/vote-down"))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+                .andExpect(jsonPath("$.error").value("Post with ID " + id + " does not exist."));
     }
 }
