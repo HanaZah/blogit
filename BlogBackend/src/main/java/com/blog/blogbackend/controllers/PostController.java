@@ -30,7 +30,6 @@ public class PostController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
-
         DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(defaultErrorMessage);
         Map<String, String> result = resultHandler.getResultsForInvalidFields(e);
 
@@ -39,7 +38,6 @@ public class PostController {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map> missingRequestBodyParts() {
-
         Map<String, String> result = new HashMap<>();
         result.put("error", defaultErrorMessage);
 
@@ -48,7 +46,6 @@ public class PostController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map> otherErrors(Exception e) {
-
         Map<String, String> result = new HashMap<>();
         result.put("error", e.getMessage());
 
@@ -75,8 +72,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> addNewPost(@RequestBody @Valid NewPostDTO postData,
                                            @AuthenticationPrincipal User user) {
-
-        Post newPost = postService.createPost(postData, user);
+        Post newPost = postService.create(postData, user);
 
         return ResponseEntity.ok(newPost);
     }
@@ -85,10 +81,9 @@ public class PostController {
     public ResponseEntity<Post> editPost(@RequestBody @Valid NewPostDTO postData,
                                          @PathVariable Long postId,
                                          @AuthenticationPrincipal User user) {
-
         Post originalPost = postService.getPostById(postId);
         postService.verifyAuthor(originalPost, user);
-        Post updatedPost = postService.updatePost(originalPost, postData);
+        Post updatedPost = postService.update(originalPost, postData);
 
         return ResponseEntity.ok(updatedPost);
     }
@@ -96,12 +91,11 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Map> deletePost(@PathVariable Long postId,
                                           @AuthenticationPrincipal User user) {
-
         Map<String, String> result = new HashMap<>();
         Post post = postService.getPostById(postId);
         postService.verifyAuthor(post, user);
-        postService.softDeletePost(post);
-        result.put("message", "Post has been successfully deleted.");
+        postService.softDelete(post);
+        result.put("message", "Post with ID " + postId + " has been successfully deleted.");
 
         return ResponseEntity.ok(result);
     }

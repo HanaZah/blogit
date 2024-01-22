@@ -24,7 +24,7 @@ public class VoteServiceImpl implements VoteService{
     }
 
     @Override
-    public void softDeleteVote(Vote vote) {
+    public void softDelete(Vote vote) {
         vote.setDeleted(true);
         voteRepository.save(vote);
     }

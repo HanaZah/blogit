@@ -133,10 +133,10 @@ public class PostsIntegrationTests {
         mockAuthenticationContext(prepareUser());
 
         mockMvc.perform(
-                        get("/posts/12"))
+                        get("/posts/12345"))
                 .andExpect(status().is(401))
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.error").value("Post ID does not match."));
+                .andExpect(jsonPath("$.error").value("Post with ID 12345 does not exist."));
     }
 
     @Test
@@ -313,7 +313,8 @@ public class PostsIntegrationTests {
                         delete("/posts/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").exists())
-                .andExpect(jsonPath("$.message").value("Post has been successfully deleted."));
+                .andExpect(jsonPath("$.message").value("Post with ID " + id
+                        + " has been successfully deleted."));
     }
 
     @Test

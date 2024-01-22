@@ -14,15 +14,15 @@ public interface PostService {
 
     List<PostOverviewDTO> convertPostsToOverviews(List<Post> posts);
 
-    Post createPost(NewPostDTO postData, User author);
+    Post create(NewPostDTO postData, User author);
 
     Post getPostById(Long id);
 
-    Post updatePost(Post originalPost, NewPostDTO updateData);
+    Post update(Post originalPost, NewPostDTO updateData);
 
     void verifyAuthor(Post post, User author);
 
-    void softDeletePost(Post post);
+    void softDelete(Post post);
 
     int voteUp(Post post, User user);
 

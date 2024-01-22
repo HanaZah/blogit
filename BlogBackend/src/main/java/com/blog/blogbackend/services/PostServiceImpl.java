@@ -5,11 +5,11 @@ import com.blog.blogbackend.models.DTOs.PostOverviewDTO;
 import com.blog.blogbackend.models.Post;
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.repositories.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 @Service
@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post createPost(NewPostDTO postData, User author) {
+    public Post create(NewPostDTO postData, User author) {
         Post post = new Post(postData.getTitle(), postData.getContent(), author);
 
         return postRepository.save(post);
@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public Post getPostById(Long id) {
         return postRepository.findByIdAndDeleted(id, false)
-                .orElseThrow(() -> new InputMismatchException("Post ID does not match."));
+                .orElseThrow(() -> new EntityNotFoundException("Post with ID" + id + "does not exist."));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post updatePost(Post originalPost, NewPostDTO updateData) {
+    public Post update(Post originalPost, NewPostDTO updateData) {
         originalPost.setTitle(updateData.getTitle());
         originalPost.setContent(updateData.getContent());
 
@@ -73,10 +73,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void softDeletePost(Post post) {
+    public void softDelete(Post post) {
         post.setDeleted(true);
-        post.getComments().forEach(commentService::softDeleteComment);
-        post.getVotes().forEach(voteService::softDeleteVote);
+        post.getComments().forEach(commentService::softDelete);
+        post.getVotes().forEach(voteService::softDelete);
 
         postRepository.save(post);
     }

@@ -8,6 +8,7 @@ import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.models.Vote;
 import com.blog.blogbackend.repositories.PostRepository;
 import com.blog.blogbackend.services.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -106,7 +107,7 @@ public class PostServiceUnitTests {
                     return p;
                 });
 
-        Post newPost = postService.createPost(postData, author);
+        Post newPost = postService.create(postData, author);
 
         assertEquals(3, testPosts.size());
         assertNotNull(newPost);
@@ -133,7 +134,7 @@ public class PostServiceUnitTests {
         when(postRepository.findByIdAndDeleted(id, false))
                 .thenReturn(Optional.empty());
 
-        assertThrows(InputMismatchException.class, () -> postService.getPostById(id));
+        assertThrows(EntityNotFoundException.class, () -> postService.getPostById(id));
     }
 
     @Test
@@ -157,7 +158,7 @@ public class PostServiceUnitTests {
                     return post1;
                 });
 
-        Post updated = postService.updatePost(post1, updateData);
+        Post updated = postService.update(post1, updateData);
 
         assertNotNull(updated);
         assertEquals(updateData.getTitle(), updated.getTitle());
@@ -177,14 +178,14 @@ public class PostServiceUnitTests {
             Comment c = invocation.getArgument(0);
             c.setDeleted(true);
             return null;
-        }).when(commentService).softDeleteComment(any(Comment.class));
+        }).when(commentService).softDelete(any(Comment.class));
         doAnswer(invocation -> {
             Vote v = invocation.getArgument(0);
             v.setDeleted(true);
             return null;
-        }).when(voteService).softDeleteVote(any(Vote.class));
+        }).when(voteService).softDelete(any(Vote.class));
 
-        postService.softDeletePost(post1);
+        postService.softDelete(post1);
 
         assertTrue(post1.isDeleted());
         assertTrue(comment.isDeleted());

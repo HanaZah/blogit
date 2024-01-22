@@ -2,7 +2,6 @@ package com.blog.blogbackend.unit;
 
 import com.blog.blogbackend.exceptions.IllegalVoteException;
 import com.blog.blogbackend.models.Post;
-import com.blog.blogbackend.models.Role;
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.models.Vote;
 import com.blog.blogbackend.repositories.VoteRepository;
@@ -11,7 +10,6 @@ import com.blog.blogbackend.services.VoteServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,7 +59,7 @@ public class VoteServiceUnitTests {
 
         when(voteRepository.save(vote)).thenReturn(vote);
 
-        voteService.softDeleteVote(vote);
+        voteService.softDelete(vote);
 
         verify(voteRepository).save(vote);
         assertEquals(true, vote.isDeleted());

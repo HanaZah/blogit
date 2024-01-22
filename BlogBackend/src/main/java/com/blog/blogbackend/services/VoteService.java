@@ -7,7 +7,7 @@ import com.blog.blogbackend.models.Vote;
 public interface VoteService {
     Post calculateRatingForPost(Post post);
 
-    void softDeleteVote(Vote vote);
+    void softDelete(Vote vote);
 
     Post voteUp(Post post, User votingUser);
 
