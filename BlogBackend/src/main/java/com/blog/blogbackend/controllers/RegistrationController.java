@@ -4,7 +4,6 @@ import com.blog.blogbackend.models.DTOs.NewUserDTO;
 import com.blog.blogbackend.models.User;
 import com.blog.blogbackend.services.UserService;
 import com.blog.blogbackend.utils.DTOValidationResultHandler;
-import com.blog.blogbackend.utils.FieldErrorsExtractor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -57,7 +56,7 @@ public class RegistrationController {
     public ResponseEntity<Map> registerUser(@RequestBody @Valid NewUserDTO userData) throws Exception {
 
         Map<String, String> result = new HashMap<>();
-        User createdUser = userService.createNewUser(userData);
+        User createdUser = userService.create(userData);
 
         result.put("message", "User " + createdUser.getUsername() + " successfully created.");
 

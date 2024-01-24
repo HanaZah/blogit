@@ -5,7 +5,7 @@ import com.blog.blogbackend.models.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
-    User findUserByUsername(String username);
+    User create(NewUserDTO userData) throws Exception;
 
-    User createNewUser(NewUserDTO userData) throws Exception;
+    void softDelete(User user);
 }
