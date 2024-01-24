@@ -4,6 +4,8 @@ import com.blog.blogbackend.models.DTOs.AuthResponseDTO;
 import com.blog.blogbackend.models.DTOs.LoginUserDTO;
 import com.blog.blogbackend.services.AuthService;
 import com.blog.blogbackend.services.UserService;
+import com.blog.blogbackend.utils.DTOValidationResultHandler;
+import com.blog.blogbackend.utils.FieldErrorsExtractor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,19 +20,27 @@ import java.util.Map;
 @RequestMapping("user/login")
 public class LoginController {
 
-    private final UserService userService;
     private final AuthService authService;
+    private final String defaultErrorMessage = "Username and password are required.";
 
-    public LoginController(UserService userService, AuthService authService) {
-        this.userService = userService;
+    public LoginController(AuthService authService) {
         this.authService = authService;
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map> requestBodyNotValid(MethodArgumentNotValidException e) {
+
+        DTOValidationResultHandler resultHandler = new DTOValidationResultHandler(defaultErrorMessage);
+        Map<String, String> result = resultHandler.getResultsForInvalidFields(e);
+
+        return ResponseEntity.status(401).body(result);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map> noRequestBody() {
 
         Map<String, String> result = new HashMap<>();
-        result.put("error", "Username and password are required.");
+        result.put("error", defaultErrorMessage);
 
         return ResponseEntity.status(401).body(result);
     }
@@ -40,7 +50,7 @@ public class LoginController {
 
         Map<String, String> result = new HashMap<>();
 
-        result.put("message", "Email or password is incorrect.");
+        result.put("error", "Username or password is incorrect.");
 
         return ResponseEntity.status(401).body(result);
     }

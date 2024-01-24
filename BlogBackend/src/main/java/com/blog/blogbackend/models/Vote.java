@@ -12,7 +12,7 @@ public class Vote {
     private VoteId id = new VoteId();
     @Min(-1)
     @Max(1)
-    private int value = 0;
+    private int voteValue = 0;
 
     @ManyToOne
     @MapsId("userId")
@@ -42,12 +42,12 @@ public class Vote {
         this.id = id;
     }
 
-    public int getValue() {
-        return value;
+    public int getVoteValue() {
+        return voteValue;
     }
 
-    public void setValue(int vote) {
-        this.value = vote;
+    public void setVoteValue(int vote) {
+        this.voteValue = vote;
     }
 
     public User getUser() {

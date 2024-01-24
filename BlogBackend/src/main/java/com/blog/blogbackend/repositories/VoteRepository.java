@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface VoteRepository extends JpaRepository<Vote, Long> {
     Optional<Vote> findByUserAndPost(User user, Post post);
 
-    @Query("SELECT COALESCE(SUM(r.value), 0) FROM Vote r WHERE r.post = :post")
+    @Query("SELECT COALESCE(SUM(r.voteValue), 0) FROM Vote r WHERE r.post = :post")
     int getRatingForPost(Post post);
 }

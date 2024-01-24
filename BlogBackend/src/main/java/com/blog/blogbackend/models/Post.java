@@ -1,7 +1,9 @@
 package com.blog.blogbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +23,11 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
-    @OneToMany(mappedBy = "post")
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
     private boolean deleted = false;
 
@@ -32,6 +35,8 @@ public class Post {
         this.title = title;
         this.content = content;
         this.author = author;
+        comments = new ArrayList<>();
+        votes = new ArrayList<>();
     }
 
     public Post() {}

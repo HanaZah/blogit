@@ -2,7 +2,9 @@ package com.blog.blogbackend.services;
 
 
 import com.blog.blogbackend.models.User;
+import com.blog.blogbackend.utils.TimeProvider;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -19,9 +21,11 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     final Environment environment;
+    final TimeProvider timeProvider;
 
-    public JwtServiceImpl(Environment environment) {
+    public JwtServiceImpl(Environment environment, TimeProvider timeProvider) {
         this.environment = environment;
+        this.timeProvider = timeProvider;
     }
 
     @Override
@@ -34,6 +38,11 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(jwt, Claims::getExpiration);
     }
 
+    @Override
+    public Long extractId(String jwt) {
+        return extractClaim(jwt, claims -> claims.get("userId", Long.class));
+    }
+
     private <T> T extractClaim(String jwt, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(jwt);
         return claimsResolver.apply(claims);
@@ -41,12 +50,16 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
-        final String username = extractUsername(jwt);
-        return (username.equals(userDetails.getUsername())) && isTokenUnexpired(jwt);
+        try {
+            final String username = extractUsername(jwt);
+            return (username.equals(userDetails.getUsername())) && isTokenUnexpired(jwt);
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
     }
 
     private boolean isTokenUnexpired(String jwt) {
-        return extractExpiration(jwt).after(new Date());
+        return extractExpiration(jwt).after(timeProvider.now());
     }
 
     private Claims extractAllClaims(String jwt) {

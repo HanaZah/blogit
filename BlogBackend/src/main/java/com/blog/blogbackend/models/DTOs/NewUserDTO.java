@@ -6,23 +6,20 @@ import jakarta.validation.constraints.Size;
 
 public class NewUserDTO {
 
-    @NotNull (message = "Username is required")
-    @NotBlank (message = "Username is required")
+    @NotNull (message = "Username is required.")
+    @NotBlank (message = "Username is required.")
     private String username;
 
-    private String email;
-
-    @NotNull (message = "Password is required")
-    @NotBlank (message = "Password is required")
-    @Size(min = 6, message = "Password must contain at least 6 characters")
+    @NotNull (message = "Password is required.")
+    @NotBlank (message = "Password is required.")
+    @Size(min = 6, message = "Password must contain at least 6 characters.")
     private String password;
 
     public NewUserDTO() {
     }
 
-    public NewUserDTO(String username, String email, String password) {
+    public NewUserDTO(String username, String password) {
         this.username = username;
-        this.email = email;
         this.password = password;
     }
 
